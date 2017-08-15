@@ -1,0 +1,13 @@
+- name: copy sparkstack yml
+  template:
+    src: sparkstack.yml
+    dest: .
+
+- name: remove spark
+  shell: docker stack rm spark
+
+- pause:
+    seconds: "{{ seconds }}"
+
+- name: setup spark
+  shell: docker stack deploy --compose-file sparkstack.yml spark

@@ -1,0 +1,9 @@
+#spark master
+master: master
+
+#spark worker
+worker: worker
+
+#pause
+seconds: 5
+

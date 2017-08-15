@@ -1,0 +1,33 @@
+version: "3"
+services:
+
+  {{ master }}:
+    image: gettyimages/spark
+    hostname: {{ master }}
+    ports:
+      - 4040:4040
+      - 8090:8080
+    networks:
+      - backend
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    command: bin/spark-class org.apache.spark.deploy.master.Master -h {{ master }}
+    
+  {{ worker }}: 
+    image: gettyimages/spark
+    hostname: {{ worker }}
+    depends_on:
+       - {{ master }}
+    ports:
+      - 8081:8081
+    networks:
+      - backend
+    deploy:
+      replicas: 2
+      placement:
+        constraints: [node.role == worker]
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://{{ master }}:7077
+
+networks:
+  backend:
